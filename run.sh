@@ -1,4 +1,4 @@
 #!/bin/bash
 
 . install/setup.bash 
-ros2 launch ros2_utils all.launch.py 
+ros2 launch web_ui server.launch.py 
