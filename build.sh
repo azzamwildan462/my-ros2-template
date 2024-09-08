@@ -1,1 +1,1 @@
-docker build -t ros-server:latest .
+docker build -t ros2-server:latest .

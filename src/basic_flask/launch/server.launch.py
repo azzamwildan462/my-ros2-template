@@ -18,7 +18,7 @@ def generate_launch_description():
     )
 
     server = Node(
-        package="web_ui",
+        package="basic_flask",
         executable="server.py",
         name="server",
         output="screen",

@@ -1,0 +1,22 @@
+networks:
+  r2s_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 100.254.100.0/24
+
+services:
+  ros2-server:
+    image: ros2-server:latest
+    container_name: ros2-server
+    restart: always
+    environment:
+      TZ: "Asia/Jakarta"
+    ports:
+      - 5000:5000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      r2s_net:
+        ipv4_address: 100.254.100.2

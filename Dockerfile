@@ -13,6 +13,7 @@ RUN pip3 install \
     pandas \
     loguru \
     flask \
+    flask_jwt_extended \ 
     flask_cors 
 
 RUN mkdir -p /root/server

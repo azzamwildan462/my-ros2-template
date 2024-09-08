@@ -3,6 +3,8 @@
 import os
 import sys
 import json
+import threading
+import time
 from io import StringIO
 import pandas as pd
 from loguru import logger
@@ -18,8 +20,6 @@ SERVER_PORT = os.getenv("DEBUG_LEVEL", "5000")
 
 class Server(Node):
     def __init__(self):
-        self.lock = Lock()
-
         super().__init__("server")
 
         # Init
