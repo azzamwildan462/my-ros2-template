@@ -1,18 +1,34 @@
 cmake_minimum_required(VERSION 3.8)
-project(web_ui)
+project(ros2_interface)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 # find dependencies
-find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+set(var_dependencies 
+  ament_cmake
+  rclcpp
+  std_msgs
+  geometry_msgs
+  rosidl_default_generators
+)
 
-install(PROGRAMS scripts/ui_server.py  DESTINATION lib/${PROJECT_NAME})
+foreach(var_dependency ${var_dependencies})
+  find_package(${var_dependency} REQUIRED)
+endforeach()
 
+set(msg_files
+    msg/PointArray.msg)
+set(srv_files srv/Dummy.srv)
+
+rosidl_generate_interfaces(
+  ${PROJECT_NAME}
+  ${msg_files}
+  ${srv_files}
+  DEPENDENCIES
+  ${var_dependencies})
+ament_export_dependencies(rosidl_default_runtime ${var_dependencies})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
