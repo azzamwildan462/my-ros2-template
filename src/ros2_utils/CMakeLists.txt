@@ -6,9 +6,44 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+
+# List of dependencies
+set(var_dependencies
+  ament_cmake
+  rclcpp
+  std_msgs
+  geometry_msgs
+  fmt
+)
+
+# Find dependencies
+foreach(var_dependency ${var_dependencies})
+  find_package(${var_dependency} REQUIRED)
+endforeach()
+
+add_library(
+  ${PROJECT_NAME}
+  src/help_logger.cpp)
+ament_target_dependencies(${PROJECT_NAME} ${var_dependencies})
+target_link_libraries(${PROJECT_NAME} fmt::fmt)
+
+target_include_directories(
+  ${PROJECT_NAME}
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+         "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${var_dependencies})
+
+include_directories(include)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
