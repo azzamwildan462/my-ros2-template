@@ -15,10 +15,10 @@ ros.on("close", function () {
     console.log("Connection to WebSocket server closed.");
 });
 
-// Create a ROSLIB Topic to subscribe to the 'chatter' topic
+// Create a ROSLIB Topic to subscribe to the 'ui_test' topic
 var listener = new ROSLIB.Topic({
     ros: ros,
-    name: "/chatter",
+    name: "/ui_test",
     messageType: "std_msgs/String",
 });
 

@@ -1,45 +1,30 @@
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "ros2_utils/help_logger.hpp"
+#include "master/master.hpp"
 
-class Master : public rclcpp::Node
+Master::Master()
+    : Node("master")
 {
-public:
-    rclcpp::TimerBase::SharedPtr tim_50hz;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_test;
-
-    HelpLogger logger;
-
-    Master() : Node("master")
+    if (!logger.init())
     {
-
-        //----Logger
-        if (!logger.init())
-        {
-            RCLCPP_ERROR(this->get_logger(), "Failed to initialize logger");
-            rclcpp::shutdown();
-        }
-
-        //----Timer
-        tim_50hz = this->create_wall_timer(std::chrono::milliseconds(20), std::bind(&Master::callback_tim_50hz, this));
-
-        //----Publisher
-        pub_test = this->create_publisher<std_msgs::msg::String>("chatter", 1);
+        RCLCPP_ERROR(this->get_logger(), "Failed to initialize logger");
+        rclcpp::shutdown();
     }
 
-    void callback_tim_50hz()
-    {
-        static int count = 0;
-        std::string message = "Hello, World! " + std::to_string(count);
-        logger.info("%s", message.c_str());
+    tim_routine = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&Master::callback_routine, this));
 
-        std_msgs::msg::String msg;
-        msg.data = message;
-        pub_test->publish(msg);
+    pub_ui_test = this->create_publisher<std_msgs::msg::String>("ui_test", 10);
 
-        count++;
-    }
-};
+    logger.info("Master node initialized");
+}
+
+Master::~Master()
+{
+}
+
+void Master::callback_routine()
+{
+    logger.info("Callback routine");
+    process_transmitter();
+}
 
 int main(int argc, char **argv)
 {
