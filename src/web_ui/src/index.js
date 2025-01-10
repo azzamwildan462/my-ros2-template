@@ -1,3 +1,13 @@
+// Navbar Animation
+anime({
+    targets: ".navbar-svgs path",
+    strokeDashoffset: [anime.setDashoffset, 0],
+    easing: "easeInOutExpo",
+    backgroundColor: "#fff",
+    duration: 2000,
+    loop: true,
+});
+
 // Connect to the ROS bridge WebSocket server
 var ros = new ROSLIB.Ros({
     url: "ws://" + window.location.hostname + ":9090",
