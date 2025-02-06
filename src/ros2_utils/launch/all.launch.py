@@ -41,10 +41,27 @@ def generate_launch_description():
         prefix='nice -n -10',
     )
 
+    telemetry = Node(
+        package="communication",
+        executable="telemetry.py",
+        name="telemetry",
+        parameters=[{
+            "INFLUXDB_URL": "http://10.199.13.56:8086",
+            "INFLUXDB_USERNAME": "raisa",
+            "INFLUXDB_PASSWORD": "itssurabaya",
+            "INFLUXDB_ORG": "ITS",
+            "INFLUXDB_BUCKET": "raisa_fix",
+            "ROBOT_NAME": "my_robot",
+        }],
+        output="screen",
+        respawn=True,
+    )
+
     return LaunchDescription(
         [
             ui_server,
             rosbridge_server, 
-            master
+            master,
+            telemetry
         ]
     )
