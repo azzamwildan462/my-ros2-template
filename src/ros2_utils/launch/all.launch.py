@@ -57,11 +57,25 @@ def generate_launch_description():
         respawn=True,
     )
 
+    keyboard_input = Node(
+        package='hardware',
+        executable='keyboard_input',
+        name='keyboard_input',
+        output='screen',
+        respawn=True,
+        prefix=['xterm -e'],
+    )
+
+
     return LaunchDescription(
         [
             ui_server,
             rosbridge_server, 
+
+            telemetry,
+
             master,
-            telemetry
+
+            keyboard_input,
         ]
     )
