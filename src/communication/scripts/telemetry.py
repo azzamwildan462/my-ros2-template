@@ -19,8 +19,8 @@ from threading import Lock
 import numpy as np
 
 from std_msgs.msg import Float32
-from raisa_interfaces.msg import Stm32ToPc
 from nav_msgs.msg import Odometry
+from std_msgs.msg import Int16
 
 class Telemetry(Node):
     def __init__(self):
@@ -32,13 +32,13 @@ class Telemetry(Node):
         # Get config from ROS2 parameters
         # -------------------------------
         self.get_logger().info("Getting config from ROS2 parameters")
-        self.declare_parameter("INFLUXDB_URL", "http://10.199.13.56:8086")
-        self.declare_parameter("INFLUXDB_USERNAME", "raisa")
-        self.declare_parameter("INFLUXDB_PASSWORD", "itssurabaya")
-        self.declare_parameter("INFLUXDB_ORG", "ITS")
-        self.declare_parameter("INFLUXDB_BUCKET", "raisa_nwe")
-        self.declare_parameter("ROBOT_NAME", "raisa")
-        self.declare_parameter("publish_period", 10)
+        self.declare_parameter("INFLUXDB_URL", "http://x.x.x.x:8086")
+        self.declare_parameter("INFLUXDB_USERNAME", "x")
+        self.declare_parameter("INFLUXDB_PASSWORD", "xx")
+        self.declare_parameter("INFLUXDB_ORG", "xxx")
+        self.declare_parameter("INFLUXDB_BUCKET", "xxxx")
+        self.declare_parameter("ROBOT_NAME", "xxxxx")
+        self.declare_parameter("publish_period", 10) # in ms
 
         self.INFLUXDB_URL = self.get_parameter("INFLUXDB_URL").get_parameter_value().string_value
         self.INFLUXDB_USERNAME = self.get_parameter("INFLUXDB_USERNAME").get_parameter_value().string_value
@@ -46,13 +46,13 @@ class Telemetry(Node):
         self.INFLUXDB_ORG = self.get_parameter("INFLUXDB_ORG").get_parameter_value().string_value
         self.INFLUXDB_BUCKET = self.get_parameter("INFLUXDB_BUCKET").get_parameter_value().string_value
         self.ROBOT_NAME = self.get_parameter("ROBOT_NAME").get_parameter_value().string_value
-        self.publish_period = self.get_parameter("publish_period").value()
+        self.publish_period = self.get_parameter("publish_period").get_parameter_value().integer_value
 
         # Subscriber
         # ----------
         self.sub_distance_travelled = self.create_subscription(Float32, "/distance_travelled", self.callback_sub_distance_travelled, 10)
-        self.sub_stm32topc = self.create_subscription(Stm32ToPc, "/stm32/to_pc", self.callback_sub_stm32topc, 10)
         self.sub_odom = self.create_subscription(Odometry, "/odom", self.callback_sub_odom, 10)
+        self.sub_battery = self.create_subscription(Int16, "/can/battery", self.callback_sub_battery, 10)
 
         # ROS2 Timer
         # ----------
@@ -101,7 +101,7 @@ class Telemetry(Node):
         self.time_robot_started = datetime.utcnow()
         self.distance_travelled = 0.0
         self.prev_distance_travelled = 0.0
-        self.stm32topc = Stm32ToPc()
+        self.battery = 0.0
         self.odom = Odometry()
         self.cpu_usage_percent = 0.0
         self.ram_usage_percent = 0.0
@@ -119,7 +119,7 @@ class Telemetry(Node):
             
             point = point.time(self.time_robot_started)
 
-            self.db_write_api.write(bucket=self.INFLUXDB_BUCKET, org="ITS", record=point)
+            self.db_write_api.write(bucket=self.INFLUXDB_BUCKET, org=self.INFLUXDB_ORG, record=point)
         except Exception as e:
             logger.error(e)
             self.error_counter += 1
@@ -135,7 +135,7 @@ class Telemetry(Node):
             
             point = point.time(datetime.utcnow())
 
-            self.db_write_api.write(bucket=self.INFLUXDB_BUCKET, org="ITS", record=point)
+            self.db_write_api.write(bucket=self.INFLUXDB_BUCKET, org=self.INFLUXDB_ORG, record=point)
         except Exception as e:
             logger.error(e)
             self.error_counter += 1
@@ -147,9 +147,9 @@ class Telemetry(Node):
         self.distance_travelled = msg.data
         self.lock.release()
     
-    def callback_sub_stm32topc(self, msg):
+    def callback_sub_battery(self, msg):
         self.lock.acquire()
-        self.stm32topc = msg
+        self.battery = float(msg.data)
         self.lock.release()
     
     def callback_sub_odom(self, msg):
@@ -171,7 +171,7 @@ class Telemetry(Node):
         delta_distance_travelled = self.distance_travelled - self.prev_distance_travelled
 
         self.lock.acquire()
-        self.write_sequently(["battery", "pose_x", "pose_y", "pose_theta", "cpu_usage", "ram_usage", "current_distance_travalled"], [self.stm32topc.battery_voltage, odom_pose_x, odom_pose_y, odom_pose_theta, self.cpu_usage_percent, self.ram_usage_percent, delta_distance_travelled])
+        self.write_sequently(["battery", "pose_x", "pose_y", "pose_theta", "cpu_usage", "ram_usage", "current_distance_travalled"], [self.battery, odom_pose_x, odom_pose_y, odom_pose_theta, self.cpu_usage_percent, self.ram_usage_percent, delta_distance_travelled])
         self.write_once(["distance_travelled"], [self.distance_travelled])
         self.lock.release()
 

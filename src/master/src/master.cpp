@@ -22,7 +22,6 @@ Master::~Master()
 
 void Master::callback_routine()
 {
-    logger.info("Callback routine");
     process_transmitter();
 }
 
