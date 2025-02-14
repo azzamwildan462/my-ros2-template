@@ -18,6 +18,13 @@ def generate_launch_description():
         output='screen',
         respawn=True,
     )
+    rosapi_node = Node(
+        package='rosapi',
+        executable='rosapi_node',
+        name='rosapi_node',
+        output='screen',
+        respawn=True,
+    )
 
     ui_server = Node(
         package="web_ui",
@@ -69,6 +76,7 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            rosapi_node,
             ui_server,
             rosbridge_server, 
 
