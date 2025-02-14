@@ -72,16 +72,19 @@ async function parse_stdin(listener_id, stdout_ptr, stdin_msg) {
 
     if (splitted_stdin.length < 3) {
         stdout_ptr.value = "Invalid command";
+        stdout_ptr.className = "textarea is-warning";
         return;
     }
 
     if (splitted_stdin[0] != "ros2") {
         stdout_ptr.value = "Invalid command";
+        stdout_ptr.className = "textarea is-warning";
         return;
     }
 
     if (splitted_stdin[1] != "topic" && splitted_stdin[1] != "service" && splitted_stdin[1] != "node") {
         stdout_ptr.value = "Invalid command";
+        stdout_ptr.className = "textarea is-warning";
         return;
     }
 
@@ -94,6 +97,7 @@ async function parse_stdin(listener_id, stdout_ptr, stdin_msg) {
     //--------------------
     if (splitted_stdin.length < 4) {
         stdout_ptr.value = "Invalid command";
+        stdout_ptr.className = "textarea is-warning";
         return;
     }
 
@@ -109,6 +113,7 @@ function parse_topic_cmd(listener_id, stdout_ptr, command, topic_name) {
     }
     else {
         stdout_ptr.value = "Invalid command";
+        stdout_ptr.className = "textarea is-warning";
         return;
     }
 }
@@ -140,8 +145,11 @@ function echo_topic(listener_id, stdout_ptr, topic_name) {
 
         if (!topic_ditemukan) {
             stdout_ptr.value = "Topic not found";
+            stdout_ptr.className = "textarea is-warning";
             return;
         }
+
+        stdout_ptr.className = "textarea is-primary";
 
         if (listener_id == 1) {
             if (listener1 != null) {
@@ -232,6 +240,8 @@ function get_all_topics(stdout_ptr) {
 
     var request = new ROSLIB.ServiceRequest();
 
+    stdout_ptr.className = "textarea is-primary";
+
     topicsService.callService(request, function (result) {
         let topics = result.topics;
         let types = result.types;
@@ -279,7 +289,10 @@ stdin1.addEventListener('keydown', async function (event) {
 stdin2.addEventListener('keydown', function (event) {
     if (event.key == "Enter") {
         stdin2_val = stdin2.value;
+        stdin2_history.push(stdin2_val);
+        stdin2_history_index = stdin2_history.length;
         parse_stdin(2, stdout2, stdin2_val);
+        stdin2.value = "";
     }
     else if (event.key == "Escape") {
         if (listener2 != null) {
@@ -287,11 +300,30 @@ stdin2.addEventListener('keydown', function (event) {
             listener2 = null;
         }
     }
+    else if (event.key == "ArrowUp") {
+        if (stdin2_history.length > 0) {
+            if (stdin2_history_index > 0) {
+                stdin2_history_index--;
+                stdin2.value = stdin2_history[stdin2_history_index];
+            }
+        }
+    }
+    else if (event.key == "ArrowDown") {
+        if (stdin2_history.length > 0) {
+            if (stdin2_history_index < stdin2_history.length - 1) {
+                stdin2_history_index++;
+                stdin2.value = stdin2_history[stdin2_history_index];
+            }
+        }
+    }
 });
 stdin3.addEventListener('keydown', function (event) {
     if (event.key == "Enter") {
         stdin3_val = stdin3.value;
+        stdin3_history.push(stdin3_val);
+        stdin3_history_index = stdin3_history.length;
         parse_stdin(3, stdout3, stdin3_val);
+        stdin3.value = "";
     }
     else if (event.key == "Escape") {
         if (listener3 != null) {
@@ -299,16 +331,51 @@ stdin3.addEventListener('keydown', function (event) {
             listener3 = null;
         }
     }
+    else if (event.key == "ArrowUp") {
+        if (stdin3_history.length > 0) {
+            if (stdin3_history_index > 0) {
+                stdin3_history_index--;
+                stdin3.value = stdin3_history[stdin3_history_index];
+            }
+        }
+    }
+    else if (event.key == "ArrowDown") {
+        if (stdin3_history.length > 0) {
+            if (stdin3_history_index < stdin3_history.length - 1) {
+                stdin3_history_index++;
+                stdin3.value = stdin3_history[stdin3_history_index];
+            }
+        }
+    }
 });
 stdin4.addEventListener('keydown', function (event) {
     if (event.key == "Enter") {
         stdin4_val = stdin4.value;
+        stdin4_history.push(stdin4_val);
+        stdin4_history_index = stdin4_history.length;
         parse_stdin(4, stdout4, stdin4_val);
+        stdin4.value = "";
     }
     else if (event.key == "Escape") {
         if (listener4 != null) {
             listener4.unsubscribe();
             listener4 = null;
+        }
+    }
+    else if (event.key == "ArrowUp") {
+        if (stdin4_history.length > 0) {
+            if (stdin4_history_index > 0) {
+                stdin4_history_index--;
+                stdin4.value = stdin4_history[stdin4_history_index];
+            }
+        }
+    }
+    else if (event.key == "ArrowDown") {
+        if (stdin4_history.length > 0) {
+            if (stdin4_history_index < stdin4_history.length - 1) {
+                stdin4_history_index++;
+                stdin4.value = stdin4_history[stdin4_history_index];
+            }
         }
     }
 });
