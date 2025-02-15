@@ -2,6 +2,7 @@ import os
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import SetEnvironmentVariable
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -11,6 +12,10 @@ ws_path = path_config_buffer_split[0] + "/../../"
 path_config = ws_path + "src/ros2_utils/configs/"
 
 def generate_launch_description():
+    
+    SetEnvironmentVariable(name='RMW_IMPLEMENTATION', value='rmw_cyclonedds_cpp'),
+    SetEnvironmentVariable(name='CYCLONEDDS_URI', value='file://' + path_config + 'cyclonedds.xml'),
+
     rosbridge_server = Node(
         package='rosbridge_server',
         executable='rosbridge_websocket',
