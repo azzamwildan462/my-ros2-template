@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>ROS 2 Template UI</title>
+    <title>ROS2 IF</title>
     <link rel="stylesheet" href="./bulma.min.css">
     <link rel="stylesheet" href="./index.css">
     <script src="./roslib.min.js"></script>
@@ -51,14 +51,15 @@
     <div class="container is-fluid">
         <div class="grid">
             <div class="cell is-row-start-1">
-                <input class="input is-info" id="stdin1" type="text" placeholder="Info input1" />
+                <input class="input is-info" id="stdin1" type="text" placeholder="Example: ros2 topic list" />
             </div>
             <div class="cell is-row-start-2">
                 <textarea rows="15" class="textarea is-primary" id="stdout1" placeholder="Primary textarea1"></textarea>
             </div>
 
             <div class="cell is-row-start-3">
-                <input class="input is-info" id="stdin2" type="text" placeholder="Info input5" />
+                <input class="input is-info" id="stdin2" type="text"
+                    placeholder="Example: ros2 topic echo /master/to_ui" />
             </div>
             <div class="cell is-row-start-4">
                 <textarea rows="15" class="textarea is-primary" id="stdout2" placeholder="Primary textarea5"></textarea>

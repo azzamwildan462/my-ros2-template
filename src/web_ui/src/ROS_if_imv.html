@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>ROS 2 Template UI</title>
+    <title>ROS2 IF Image View</title>
     <link rel="stylesheet" href="./bulma.min.css">
     <link rel="stylesheet" href="./index.css">
     <script src="./roslib.min.js"></script>
@@ -51,14 +51,15 @@
     <div class="container is-fluid">
         <div class="grid">
             <div class="cell is-row-start-1">
-                <input class="input is-info" id="stdin1" type="text" placeholder="Info input1" />
+                <input class="input is-info" id="stdin1" type="text" placeholder="Example: /camera/frame_bgr" />
             </div>
             <div class="cell is-row-start-2">
                 <img id="stdout1" src="">
             </div>
 
             <div class="cell is-row-start-3">
-                <input class="input is-info" id="stdin2" type="text" placeholder="Info input5" />
+                <input class="input is-info" id="stdin2" type="text"
+                    placeholder="Example: /camera/frame_bgr 30 (set quality to 30)" />
             </div>
             <div class="cell is-row-start-4">
                 <img id="stdout2" src="">
