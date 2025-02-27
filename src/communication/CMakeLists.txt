@@ -9,6 +9,15 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(ros2_utils REQUIRED)
+
+add_executable(wifi_control src/wifi_control.cpp)
+ament_target_dependencies(wifi_control rclcpp std_msgs ros2_utils)
+
+install(TARGETS
+  wifi_control
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(PROGRAMS scripts/telemetry.py DESTINATION lib/${PROJECT_NAME})
 

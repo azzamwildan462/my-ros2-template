@@ -31,6 +31,20 @@ def generate_launch_description():
         respawn=True,
     )
 
+    wifi_control = Node(
+        package="communication",
+        executable="wifi_control",
+        name="wifi_control",
+        parameters=[
+            {
+                "hotspot_ssid": "gh_template",
+                "hotspot_password": "gh_template",
+            },
+        ],
+        output="screen",
+        respawn=True,
+    )
+
     ui_server = Node(
         package="web_ui",
         executable="ui_server.py",
@@ -81,14 +95,16 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            rosapi_node,
-            ui_server,
-            rosbridge_server, 
+            # rosapi_node,
+            # ui_server,
+            # rosbridge_server, 
 
-            telemetry,
+            # telemetry,
 
-            master,
+            # master,
 
-            keyboard_input,
+            # keyboard_input,
+
+            wifi_control,
         ]
     )
