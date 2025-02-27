@@ -111,11 +111,136 @@ function parse_topic_cmd(listener_id, stdout_ptr, command, topic_name) {
     if (command == "echo") {
         echo_topic(listener_id, stdout_ptr, topic_name);
     }
+    else if (command == "hz") {
+        hz_topic(listener_id, stdout_ptr, topic_name);
+    }
     else {
         stdout_ptr.value = "Invalid command";
         stdout_ptr.className = "textarea is-warning";
         return;
     }
+}
+
+function hz_topic(listener_id, stdout_ptr, topic_name) {
+    var topicsService = new ROSLIB.Service({
+        ros: ros,
+        name: '/rosapi/topics',
+        serviceType: 'rosapi/Topics'
+    });
+
+    var request = new ROSLIB.ServiceRequest();
+
+    topicsService.callService(request, function (result) {
+        let topics = result.topics;
+        let types = result.types;
+
+        let topic_ditemukan = false;
+        let fixed_topic_name = topic_name;
+        let fixed_topic_type = "";
+        let prev_time = new Date().getTime();
+
+        for (let i = 0; i < topics.length; i++) {
+            if (topics[i] == topic_name) {
+                topic_ditemukan = true;
+                fixed_topic_type = types[i];
+                break;
+            }
+        }
+
+        if (!topic_ditemukan) {
+            stdout_ptr.value = "Topic not found";
+            stdout_ptr.className = "textarea is-warning";
+            return;
+        }
+
+        stdout_ptr.className = "textarea is-primary";
+
+        if (listener_id == 1) {
+            if (listener1 != null) {
+                listener1.unsubscribe();
+                listener1 = null;
+            }
+
+            listener1 = new ROSLIB.Topic({
+                ros: ros,
+                name: fixed_topic_name,
+                messageType: fixed_topic_type,
+            });
+
+            listener1.subscribe(function (message) {
+                let curr_time = new Date().getTime();
+                let hz = 1000 / (curr_time - prev_time);
+                prev_time = curr_time
+
+                stdout_ptr.value += `${hz.toFixed(3)} Hz\n`;
+                stdout_ptr.scrollTop = stdout_ptr.scrollHeight;
+            });
+        }
+        else if (listener_id == 2) {
+            if (listener2 != null) {
+                listener2.unsubscribe();
+                listener2 = null;
+            }
+
+            listener2 = new ROSLIB.Topic({
+                ros: ros,
+                name: fixed_topic_name,
+                messageType: fixed_topic_type,
+            });
+
+            listener2.subscribe(function (message) {
+                let curr_time = new Date().getTime();
+                let hz = 1000 / (curr_time - prev_time);
+                prev_time = curr_time
+
+                stdout_ptr.value += `${hz.toFixed(3)} Hz\n`;
+                stdout_ptr.scrollTop = stdout_ptr.scrollHeight;
+            });
+        }
+        else if (listener_id == 3) {
+            if (listener3 != null) {
+                listener3.unsubscribe();
+                listener3 = null;
+            }
+
+            listener3 = new ROSLIB.Topic({
+                ros: ros,
+                name: fixed_topic_name,
+                messageType: fixed_topic_type,
+            });
+
+            listener3.subscribe(function (message) {
+                let curr_time = new Date().getTime();
+                let hz = 1000 / (curr_time - prev_time);
+                prev_time = curr_time
+
+                stdout_ptr.value += `${hz.toFixed(3)} Hz\n`;
+                stdout_ptr.scrollTop = stdout_ptr.scrollHeight;
+            });
+        }
+        else if (listener_id == 4) {
+            if (listener4 != null) {
+                listener4.unsubscribe();
+                listener4 = null;
+            }
+
+            listener4 = new ROSLIB.Topic({
+                ros: ros,
+                name: fixed_topic_name,
+                messageType: fixed_topic_type,
+            });
+
+            listener4.subscribe(function (message) {
+                let curr_time = new Date().getTime();
+                let hz = 1000 / (curr_time - prev_time);
+                prev_time = curr_time
+
+                stdout_ptr.value += `${hz.toFixed(3)} Hz\n`;
+                stdout_ptr.scrollTop = stdout_ptr.scrollHeight;
+            });
+        }
+
+    });
 }
 
 function echo_topic(listener_id, stdout_ptr, topic_name) {
