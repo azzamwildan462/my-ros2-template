@@ -1,0 +1,1 @@
+/home/wildan/proyek/my-ros2-template/src/master/scripts/all_launch.py

@@ -1,0 +1,14 @@
+[Unit]
+Description=DZIZAM driver for controlling fan control
+After=multi-user.target
+StartLimitIntervalSec=0
+
+[Service]
+Environment="EXEC_PATH=/home/wildan/proyek/ml/dzizam_cli"
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/bash -c "cd ${EXEC_PATH} && ./build/dzizam_cli"
+
+[Install]
+WantedBy=default.target

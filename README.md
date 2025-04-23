@@ -1,13 +1,18 @@
 # This is just a template 
 
-## Install necessary dependencies
+## Compile 
 ```
-sudo apt install ros-humble-rosbridge-server
-sudo apt install ros-humble-rosbridge-suite
-sudo apt install libyaml-cpp-dev 
+mkdir build && cd build 
+cmake .. 
+make 
 ```
 
-## Remake 
-```
-./init_all.sh "<maintainer_name>" <maintainer_email>
-```
+## How to run? 
+Just a simple thing doing binary run in `bin/`
+
+## Run as a Service 
+Create a copy of systemd_service_template.service   
+Just change the `Description`, `Environment`, and `ExecStart` 
+Optionally change the `RestartSec`  
+
+btw, i'm too lazy to make a script or something to do automation xd
