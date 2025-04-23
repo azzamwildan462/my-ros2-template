@@ -10,6 +10,9 @@ make
 ## How to run? 
 Just a simple thing doing binary run in `bin/`
 
+## Run using all launcher 
+Just doing `./run.sh`
+
 ## Run as a Service 
 Create a copy of systemd_service_template.service   
 Just change the `Description`, `Environment`, and `ExecStart` 
