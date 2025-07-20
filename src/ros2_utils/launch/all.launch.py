@@ -4,6 +4,9 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
 
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
+
 from ament_index_python.packages import get_package_share_directory
 
 path_config_buffer = os.getenv('AMENT_PREFIX_PATH', '')
@@ -31,20 +34,6 @@ def generate_launch_description():
         respawn=True,
     )
 
-    wifi_control = Node(
-        package="communication",
-        executable="wifi_control",
-        name="wifi_control",
-        parameters=[
-            {
-                "hotspot_ssid": "gh_template",
-                "hotspot_password": "gh_template",
-            },
-        ],
-        output="screen",
-        respawn=True,
-    )
-
     ui_server = Node(
         package="web_ui",
         executable="ui_server.py",
@@ -56,15 +45,6 @@ def generate_launch_description():
         ],
         output="screen",
         respawn=True,
-    )
-
-    master = Node(
-        package='master',
-        executable='master',
-        name='master',
-        output='screen',
-        respawn=True,
-        prefix='nice -n -10',
     )
 
     telemetry = Node(
@@ -83,13 +63,65 @@ def generate_launch_description():
         respawn=True,
     )
 
+    watchdog_node = Node(
+        package="ros2_utils",
+        executable="watchdog_node.py",
+        name="watchdog_node",
+        parameters=[{
+                'container_name': '/main_container',
+                'watched_nodes': [
+                    "{'name': 'master', 'plugin': 'Master', 'package': 'master'}",
+                    "{'name': 'WiFi_Control', 'plugin': 'WiFIControl', 'package': 'communication'}"
+                ]
+        }],
+        output="screen",
+        respawn=True,
+    )
+
     keyboard_input = Node(
         package='hardware',
         executable='keyboard_input',
         name='keyboard_input',
-        output='screen',
-        respawn=True,
         prefix=['xterm -e'],
+        output="screen",
+        respawn=True,
+    )
+
+    # Compose nodes into a container
+    # =================================================================================================================
+
+    wifi_control = ComposableNode(
+        name="WiFi_Control",
+        plugin="WiFIControl",
+        package="communication",
+        parameters=[
+            {
+                "hotspot_ssid": "gh_template",
+                "hotspot_password": "gh_template",
+            },
+        ],
+    )
+
+    master = ComposableNode(
+        name='master',
+        plugin='Master',
+        package='master',
+    )
+
+
+    # Container
+    # =============================================================
+
+    main_container = ComposableNodeContainer(
+        name='main_container',
+        namespace='',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            wifi_control,
+            master,
+        ],
+        output='screen',
     )
 
 
@@ -100,11 +132,9 @@ def generate_launch_description():
             # rosbridge_server, 
 
             # telemetry,
-
-            # master,
-
             # keyboard_input,
 
-            wifi_control,
+            main_container,
+            watchdog_node,
         ]
     )

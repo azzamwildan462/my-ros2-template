@@ -20,8 +20,8 @@ public:
     bool is_wifi_connected = false;
     bool is_hotspot_on = false;
 
-    WiFIControl()
-        : Node("WiFi_Control")
+    explicit WiFIControl(const rclcpp::NodeOptions &options)
+        : Node("WiFi_Control", options)
     {
         user = getenv("SUDO_USER");
 
@@ -40,13 +40,13 @@ public:
         if (!logger.init())
         {
             RCLCPP_ERROR(this->get_logger(), "Failed to initialize logger");
-            rclcpp::shutdown();
+            throw std::runtime_error("Error");
         }
 
         if (user == "invalid")
         {
             logger.error("Invalid user!");
-            rclcpp::shutdown();
+            throw std::runtime_error("Error");
         }
 
         tim_routine = this->create_wall_timer(std::chrono::milliseconds(20000), std::bind(&WiFIControl::callback_routine, this));
@@ -118,15 +118,5 @@ public:
     }
 };
 
-int main(int argc, char **argv)
-{
-    rclcpp::init(argc, argv);
-
-    auto node_WiFi_Control = std::make_shared<WiFIControl>();
-
-    rclcpp::executors::MultiThreadedExecutor executor;
-    executor.add_node(node_WiFi_Control);
-    executor.spin();
-
-    return 0;
-}
+#include "rclcpp_components/register_node_macro.hpp"
+RCLCPP_COMPONENTS_REGISTER_NODE(WiFIControl)

@@ -13,7 +13,7 @@ public:
 
     HelpLogger logger;
 
-    Master();
+    explicit Master(const rclcpp::NodeOptions &options);
     ~Master();
 
     void callback_routine();

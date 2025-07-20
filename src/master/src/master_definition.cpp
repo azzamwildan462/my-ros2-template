@@ -6,4 +6,9 @@ void Master::process_transmitter()
     std_msgs::msg::String msg;
     msg.data = "Hello World " + std::to_string(counter++);
     pub_ui_test->publish(msg);
+
+    // if (counter >= 60)
+    // {
+    //     throw std::runtime_error("Error");
+    // }
 }

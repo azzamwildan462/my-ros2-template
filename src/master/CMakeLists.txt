@@ -14,7 +14,9 @@ set(var_dependencies
     ros2_utils
     ros2_interface
     tf2_geometry_msgs
-    tf2_ros)
+    tf2_ros
+    rclcpp_components
+    pluginlib)
     
 foreach(var_dependency ${var_dependencies})
   find_package(${var_dependency} REQUIRED)
@@ -22,12 +24,15 @@ endforeach()
 
 include_directories(include)
 
-add_executable(master src/master.cpp src/master_definition.cpp)
-ament_target_dependencies(master rclcpp std_msgs ros2_utils)
+add_library(master SHARED src/master.cpp src/master_definition.cpp)
+rclcpp_components_register_nodes(master "Master")
+ament_target_dependencies(master rclcpp std_msgs ros2_utils rclcpp_components)
 
 install(TARGETS
   master
-  DESTINATION lib/${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
 if(BUILD_TESTING)
