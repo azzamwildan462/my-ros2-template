@@ -41,6 +41,7 @@ def generate_launch_description():
     # ========================== Communication ================================
     wifi_control = Node(
         package="communication",
+        namespace="communication",
         executable="wifi_control",
         name="wifi_control",
         parameters=[
@@ -55,6 +56,7 @@ def generate_launch_description():
 
     telemetry = Node(
         package="communication",
+        namespace="communication",
         executable="telemetry.py",
         name="telemetry",
         parameters=[{
@@ -72,6 +74,7 @@ def generate_launch_description():
     # ========================== Hardware ================================
     keyboard_input = Node(
         package='hardware',
+        namespace='hardware',
         executable='keyboard_input',
         name='keyboard_input',
         output='screen',
@@ -82,6 +85,10 @@ def generate_launch_description():
     # ========================== Master ================================
     master = Node(
         package='master',
+<<<<<<< HEAD
+=======
+        namespace='master',
+>>>>>>> 47b69e6 (feat: merapikan sedikit)
         executable='master',
         name='master',
         output='screen',
@@ -94,6 +101,10 @@ def generate_launch_description():
     # ========================== Web UI ================================
     ui_server = Node(
         package="web_ui",
+<<<<<<< HEAD
+=======
+        namespace="web_ui",
+>>>>>>> 47b69e6 (feat: merapikan sedikit)
         executable="ui_server.py",
         name="ui_server",
         parameters=[
