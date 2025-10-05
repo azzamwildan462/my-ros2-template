@@ -13,9 +13,15 @@ path_config = ws_path + "src/ros2_utils/configs/"
 
 def generate_launch_description():
     
+    # Default menggunakan cyclone dds (localhost)
     SetEnvironmentVariable(name='RMW_IMPLEMENTATION', value='rmw_cyclonedds_cpp'),
     SetEnvironmentVariable(name='CYCLONEDDS_URI', value='file://' + path_config + 'cyclonedds.xml'),
 
+    # ============================== TFs ===================================
+
+    # ======================================================================
+
+    # ========================== Bawaan ROS ================================
     rosbridge_server = Node(
         package='rosbridge_server',
         executable='rosbridge_websocket',
@@ -23,6 +29,7 @@ def generate_launch_description():
         output='screen',
         respawn=True,
     )
+
     rosapi_node = Node(
         package='rosapi',
         executable='rosapi_node',
@@ -31,6 +38,7 @@ def generate_launch_description():
         respawn=True,
     )
 
+    # ========================== Communication ================================
     wifi_control = Node(
         package="communication",
         executable="wifi_control",
@@ -43,28 +51,6 @@ def generate_launch_description():
         ],
         output="screen",
         respawn=True,
-    )
-
-    ui_server = Node(
-        package="web_ui",
-        executable="ui_server.py",
-        name="ui_server",
-        parameters=[
-            {
-                "ui_root_path": os.path.join(ws_path,"src/web_ui/src")
-            },
-        ],
-        output="screen",
-        respawn=True,
-    )
-
-    master = Node(
-        package='master',
-        executable='master',
-        name='master',
-        output='screen',
-        respawn=True,
-        prefix='nice -n -10',
     )
 
     telemetry = Node(
@@ -83,6 +69,7 @@ def generate_launch_description():
         respawn=True,
     )
 
+    # ========================== Hardware ================================
     keyboard_input = Node(
         package='hardware',
         executable='keyboard_input',
@@ -92,6 +79,33 @@ def generate_launch_description():
         prefix=['xterm -e'],
     )
 
+    # ========================== Master ================================
+    master = Node(
+        package='master',
+        executable='master',
+        name='master',
+        output='screen',
+        respawn=True,
+        prefix='nice -n -10',
+    )
+
+    # ========================== Vision ================================
+
+    # ========================== Web UI ================================
+    ui_server = Node(
+        package="web_ui",
+        executable="ui_server.py",
+        name="ui_server",
+        parameters=[
+            {
+                "ui_root_path": os.path.join(ws_path,"src/web_ui/src")
+            },
+        ],
+        output="screen",
+        respawn=True,
+    )
+
+    # ========================== World Model ================================
 
     return LaunchDescription(
         [
@@ -105,6 +119,6 @@ def generate_launch_description():
 
             # keyboard_input,
 
-            wifi_control,
+            # wifi_control,
         ]
     )
