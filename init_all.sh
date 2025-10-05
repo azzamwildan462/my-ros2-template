@@ -13,4 +13,5 @@ ros2 pkg create world_model --build-type ament_cmake --license MIT --maintainer-
 ros2 pkg create ros2_utils --build-type ament_cmake --license MIT --maintainer-name $1 --maintainer-email $2 --dependencies rclcpp std_msgs
 ros2 pkg create ros2_interface --build-type ament_cmake --license MIT --maintainer-name $1 --maintainer-email $2
 ros2 pkg create web_ui --build-type ament_cmake --license MIT --maintainer-name $1 --maintainer-email $2
+ros2 pkg create qt_ui --build-type ament_cmake --license MIT --maintainer-name $1 --maintainer-email $2 --dependencies rclcpp std_msgs
 
