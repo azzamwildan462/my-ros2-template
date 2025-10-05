@@ -10,6 +10,16 @@ class Template(Node):
         super().__init__('template_node')
         self.get_logger().info("Template Node has been started.")
 
+        # Logger
+        # ------
+        logger.remove()
+        logger.add(
+            sys.stdout,
+            colorize=True,
+            format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level:^6}</level> | <cyan>{function}</cyan>:<cyan>{line}</cyan> - {message}",
+            enqueue=True,
+        )
+
         # Example of a timer that calls a callback every second
         self.timer = self.create_timer(1.0, self.timer_callback)
 
