@@ -85,7 +85,14 @@ def generate_launch_description():
     # ========================== Master ================================
     master = Node(
         package='master',
+<<<<<<< HEAD
         namespace='master',
+=======
+<<<<<<< HEAD
+=======
+        namespace='master',
+>>>>>>> 47b69e6 (feat: merapikan sedikit)
+>>>>>>> origin/main
         executable='master',
         name='master',
         output='screen',
@@ -98,7 +105,14 @@ def generate_launch_description():
     # ========================== Web UI ================================
     ui_server = Node(
         package="web_ui",
+<<<<<<< HEAD
         namespace="web_ui",
+=======
+<<<<<<< HEAD
+=======
+        namespace="web_ui",
+>>>>>>> 47b69e6 (feat: merapikan sedikit)
+>>>>>>> origin/main
         executable="ui_server.py",
         name="ui_server",
         parameters=[
